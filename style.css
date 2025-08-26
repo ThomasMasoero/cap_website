@@ -15,17 +15,6 @@ body {
   text-align: center;
 }
 
-/* Logo styling */
-.logo-container {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.logo {
-  width: 120px;
-  height: auto;
-}
-
 /* Heading styling */
 h1 {
   font-size: 2.2rem;
@@ -59,10 +48,6 @@ p {
 @media (max-width: 600px) {
   h1 {
     font-size: 1.8rem;
-  }
-
-  .logo {
-    width: 90px;
   }
 
   .chart-container {
