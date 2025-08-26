@@ -9,8 +9,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>I tappi del Dr. Capra</h1>
-    <p>Tappi raccolti dal 1 Luglio ad oggi</p>
+    <h1>Collezione Tappi</h1>
+    <p>Andamento cumulativo dal 1 Luglio ad oggi</p>
     <div class="chart-container">
       <canvas id="tappiChart"></canvas>
     </div>
@@ -31,25 +31,14 @@
       let total = 0;
 
       jsonData.forEach(row => {
-        let excelDate = row["data"];
-        let date;
-      
-        if (typeof excelDate === "number") {
-          // Convert Excel serial number to JS Date
-          const d = XLSX.SSF.parse_date_code(excelDate);
-          date = new Date(d.y, d.m - 1, d.d);
-        } else {
-          date = new Date(excelDate);
-        }
+        const date = new Date(row["data"]);
+        const formattedDate = date.toISOString().split("T")[0];
+        const tappi = Number(row["num_tappi"]) || 0;
 
-  const formattedDate = date.toISOString().split("T")[0];
-  const tappi = Number(row["num_tappi"]) || 0;
-
-  total += tappi;
-  labels.push(formattedDate);
-  cumulative.push(total);
-});
-
+        total += tappi;
+        labels.push(formattedDate);
+        cumulative.push(total);
+      });
 
       drawChart(labels, cumulative);
     }
@@ -62,6 +51,25 @@
           labels: labels,
           datasets: [{
             label: "Tappi Raccolti (cumulativi)",
-            data: d
+            data: data,
+            borderColor: "#3b82f6",
+            backgroundColor: "rgba(59, 130, 246, 0.2)",
+            fill: true,
+            tension: 0.3,
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: "Data" } },
+            y: { title: { display: true, text: "Tappi Raccolti" }, beginAtZero: true }
+          }
+        }
+      });
+    }
 
-
+    loadExcel();
+  </script>
+</body>
+</html>
