@@ -17,30 +17,57 @@
   </div>
 
   <script>
+    // Convert Excel numeric date to JS Date
+    function excelDateToJSDate(excelDate) {
+      const utc_days = excelDate - 25569; // days since 1970-01-01
+      const utc_value = utc_days * 86400; // convert to seconds
+      return new Date(utc_value * 1000);
+    }
+
     async function loadExcel() {
-      const response = await fetch("tappi.xlsx");
-      const arrayBuffer = await response.arrayBuffer();
+      try {
+        const response = await fetch("tappi.xlsx");
+        if (!response.ok) throw new Error("File not found or network error");
 
-      const workbook = XLSX.read(arrayBuffer, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 0 });
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 0 });
 
-      let labels = [];
-      let cumulative = [];
-      let total = 0;
+        // Sort rows by date ascending
+        jsonData.sort((a, b) => {
+          const dateA = typeof a.data === "number" ? excelDateToJSDate(a.data) : new Date(a.data);
+          const dateB = typeof b.data === "number" ? excelDateToJSDate(b.data) : new Date(b.data);
+          return dateA - dateB;
+        });
 
-      jsonData.forEach(row => {
-        const date = new Date(row["data"]);
-        const formattedDate = date.toISOString().split("T")[0];
-        const tappi = Number(row["num_tappi"]) || 0;
+        let labels = [];
+        let cumulative = [];
+        let total = 0;
 
-        total += tappi;
-        labels.push(formattedDate);
-        cumulative.push(total);
-      });
+        jsonData.forEach(row => {
+          let date;
+          if (typeof row["data"] === "number") {
+            date = excelDateToJSDate(row["data"]);
+          } else {
+            date = new Date(row["data"]);
+          }
 
-      drawChart(labels, cumulative);
+          if (isNaN(date)) return; // skip invalid dates
+
+          const formattedDate = date.toISOString().split("T")[0];
+          const tappi = Number(row["num_tappi"]) || 0;
+
+          total += tappi;
+          labels.push(formattedDate);
+          cumulative.push(total);
+        });
+
+        drawChart(labels, cumulative);
+      } catch (err) {
+        console.error("Error loading Excel file:", err);
+      }
     }
 
     function drawChart(labels, data) {
