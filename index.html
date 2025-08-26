@@ -2,14 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>I tappi del Dr. C</title>
+  <title>Tappi Raccolti</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    /* Logo styling */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 120px;
+      height: auto;
+    }
+
+    /* Optional chart container styling */
+    .chart-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Collezione di tappi del Dr. Capra</h1>
+    <!-- Logo at the top -->
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo" class="logo">
+    </div>
+
+    <h1>Collezione Tappi</h1>
     <p>Andamento cumulativo dal 1 Luglio ad oggi</p>
     <div class="chart-container">
       <canvas id="tappiChart"></canvas>
@@ -100,4 +124,3 @@
   </script>
 </body>
 </html>
-
