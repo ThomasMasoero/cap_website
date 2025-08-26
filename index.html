@@ -12,7 +12,16 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    /* General container styling */
+    /* General body styling */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #1f2937;
+    }
+
+    /* Main container */
     .container {
       max-width: 900px;
       margin: 40px auto;
@@ -20,6 +29,7 @@
       text-align: center;
     }
 
+    /* Heading styling */
     h1 {
       font-size: 2.2rem;
       margin-bottom: 10px;
@@ -32,6 +42,7 @@
       margin-bottom: 30px;
     }
 
+    /* Chart container */
     .chart-container {
       width: 100%;
       max-width: 800px;
@@ -42,10 +53,17 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
+    /* Chart.js tooltip and legend customization */
+    .chartjs-tooltip {
+      font-size: 0.9rem;
+    }
+
+    /* Optional: responsive adjustments */
     @media (max-width: 600px) {
       h1 {
         font-size: 1.8rem;
       }
+
       .chart-container {
         padding: 15px;
       }
