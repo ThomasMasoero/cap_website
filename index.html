@@ -3,16 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <title>Tappi Raccolti</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="logo.ico">
+  <link rel="shortcut icon" href="logo.ico">
+
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="favicon.png"> <!-- Favicon added -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    /* Optional chart container styling */
+    /* General container styling */
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #4b5563;
+      margin-bottom: 30px;
+    }
+
     .chart-container {
       width: 100%;
       max-width: 800px;
-      margin: 0 auto;
+      margin: 0 auto 40px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      .chart-container {
+        padding: 15px;
+      }
     }
   </style>
 </head>
@@ -26,10 +62,9 @@
   </div>
 
   <script>
-    // Convert Excel numeric date to JS Date
     function excelDateToJSDate(excelDate) {
-      const utc_days = excelDate - 25569; // days since 1970-01-01
-      const utc_value = utc_days * 86400; // convert to seconds
+      const utc_days = excelDate - 25569;
+      const utc_value = utc_days * 86400;
       return new Date(utc_value * 1000);
     }
 
@@ -44,7 +79,6 @@
         const sheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 0 });
 
-        // Sort rows by date ascending
         jsonData.sort((a, b) => {
           const dateA = typeof a.data === "number" ? excelDateToJSDate(a.data) : new Date(a.data);
           const dateB = typeof b.data === "number" ? excelDateToJSDate(b.data) : new Date(b.data);
@@ -56,19 +90,13 @@
         let total = 0;
 
         jsonData.forEach(row => {
-          let date;
-          if (typeof row["data"] === "number") {
-            date = excelDateToJSDate(row["data"]);
-          } else {
-            date = new Date(row["data"]);
-          }
-
-          if (isNaN(date)) return; // skip invalid dates
+          let date = typeof row["data"] === "number" ? excelDateToJSDate(row["data"]) : new Date(row["data"]);
+          if (isNaN(date)) return;
 
           const formattedDate = date.toISOString().split("T")[0];
           const tappi = Number(row["num_tappi"]) || 0;
-
           total += tappi;
+
           labels.push(formattedDate);
           cumulative.push(total);
         });
